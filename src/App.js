@@ -7,12 +7,14 @@ import Search from "./components/users/Search";
 import Users from "./components/users/Users";
 import axios from "axios";
 import Alert from "./components/layout/Alert";
+import User from "./components/users/User";
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
       users: [],
+      user: {},
       loading: false,
       alert: null,
     };
@@ -35,6 +37,17 @@ class App extends React.Component {
     });
   };
 
+  getUserInfo = async (login) => {
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users/${login}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({
+      user: res.data,
+      loading: false,
+    });
+  };
+
   showAlert = (msg, type) => {
     this.setState({
       alert: { msg, type },
@@ -47,7 +60,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { users, loading, alert } = this.state;
+    const { users, user, loading, alert } = this.state;
 
     return (
       <BrowserRouter>
@@ -72,6 +85,11 @@ class App extends React.Component {
                 )}
               />
               <Route exact path="/about" component={About} />
+              <Route
+                exact
+                path="/users/:login"
+                render={(props) => <User {...props} getUserInfo={this.getUserInfo} user={user} loading={loading} />}
+              />
             </Switch>
           </div>
         </div>

@@ -15,6 +15,7 @@ class App extends React.Component {
     this.state = {
       users: [],
       user: {},
+      repos: [],
       loading: false,
       alert: null,
     };
@@ -48,6 +49,17 @@ class App extends React.Component {
     });
   };
 
+  getUserRepos = async (login) => {
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users/${login}/repos?per_page=10&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({
+      repos: res.data,
+      loading: false,
+    });
+  };
+
   showAlert = (msg, type) => {
     this.setState({
       alert: { msg, type },
@@ -60,7 +72,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { users, user, loading, alert } = this.state;
+    const { users, user, loading, alert, repos } = this.state;
 
     return (
       <BrowserRouter>
@@ -88,10 +100,20 @@ class App extends React.Component {
               <Route
                 exact
                 path="/users/:login"
-                render={(props) => <User {...props} getUserInfo={this.getUserInfo} user={user} loading={loading} />}
+                render={(props) => (
+                  <User
+                    {...props}
+                    getUserInfo={this.getUserInfo}
+                    user={user}
+                    getUserRepos={this.getUserRepos}
+                    repos={repos}
+                    loading={loading}
+                  />
+                )}
               />
             </Switch>
           </div>
+          <div style={{ height: "3rem" }}></div>
         </div>
       </BrowserRouter>
     );

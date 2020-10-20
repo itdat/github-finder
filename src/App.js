@@ -1,5 +1,7 @@
-import React from "react";
+import React, { Fragment } from "react";
 import "./App.css";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import About from "./components/pages/About";
 import Navbar from "./components/layout/Navbar";
 import Search from "./components/users/Search";
 import Users from "./components/users/Users";
@@ -14,17 +16,6 @@ class App extends React.Component {
       loading: false,
       alert: null,
     };
-  }
-
-  async componentDidMount() {
-    // this.setState({ loading: true });
-    // const res = await axios.get(
-    //   `https://api.github.com/users?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    // );
-    // this.setState({
-    //   users: res.data,
-    //   loading: false,
-    // });
   }
 
   searchUsers = async (text) => {
@@ -59,19 +50,32 @@ class App extends React.Component {
     const { users, loading, alert } = this.state;
 
     return (
-      <div className="App">
-        <Navbar />
-        <div className="container">
-          <Alert alert={alert} />
-          <Search
-            searchUsers={this.searchUsers}
-            clearUsers={this.clearUsers}
-            showClear={users.length > 0 ? true : false}
-            showAlert={this.showAlert}
-          />
-          <Users loading={loading} users={users} />
+      <BrowserRouter>
+        <div className="App">
+          <Navbar />
+          <div className="container">
+            <Alert alert={alert} />
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <Fragment>
+                    <Search
+                      searchUsers={this.searchUsers}
+                      clearUsers={this.clearUsers}
+                      showClear={users.length > 0 ? true : false}
+                      showAlert={this.showAlert}
+                    />
+                    <Users loading={loading} users={users} />
+                  </Fragment>
+                )}
+              />
+              <Route exact path="/about" component={About} />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </BrowserRouter>
     );
   }
 }

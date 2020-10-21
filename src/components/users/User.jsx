@@ -1,9 +1,13 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, useContext, Fragment } from "react";
 import Spinner from "../layout/Spinner";
 import Repos from "../repos/Repos";
 import { Link } from "react-router-dom";
+import GithubContext from "../../context/github/githubContext";
 
-const User = ({ match, user, loading, repos, getUserInfo, getUserRepos }) => {
+const User = ({ match, repos, getUserRepos }) => {
+  const githubContext = useContext(GithubContext);
+  const { user, loading, getUserInfo } = githubContext;
+
   useEffect(() => {
     getUserInfo(match.params.login);
     getUserRepos(match.params.login);
@@ -34,10 +38,20 @@ const User = ({ match, user, loading, repos, getUserInfo, getUserRepos }) => {
         <Link to="/" className="btn btn-light">
           Back to search
         </Link>
-        Hirable: {hirable ? <i className="fas fa-check text-success" /> : <i className="fas fa-times text-danger" />}
+        Hirable:{" "}
+        {hirable ? (
+          <i className="fas fa-check text-success" />
+        ) : (
+          <i className="fas fa-times text-danger" />
+        )}
         <div className="card grid-2">
           <div className="all-center">
-            <img src={avatar_url} alt="" className="round-img" style={{ width: "200px" }} />
+            <img
+              src={avatar_url}
+              alt=""
+              className="round-img"
+              style={{ width: "200px" }}
+            />
             <h1>{name}</h1>
             <p>Location: {location}</p>
           </div>

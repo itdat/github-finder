@@ -14,6 +14,14 @@ const User = ({ match }) => {
     // eslint-disable-next-line
   }, []);
 
+  if (user === null) {
+    return (
+      <Fragment>
+        <h1>Oops... Something went wrong.</h1>
+      </Fragment>
+    );
+  }
+
   const {
     name,
     hirable,

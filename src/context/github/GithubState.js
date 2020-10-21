@@ -13,7 +13,7 @@ import {
 const GithubState = (props) => {
   const initialState = {
     users: [],
-    user: {},
+    user: null,
     repos: [],
     loading: false,
   };
@@ -35,13 +35,20 @@ const GithubState = (props) => {
   // Get User Info
   const getUserInfo = async (login) => {
     setLoading();
-    const res = await axios.get(
-      `https://api.github.com/users/${login}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    dispatch({
-      type: GET_USER_INFO,
-      payload: res.data,
-    });
+    try {
+      const res = await axios.get(
+        `https://api.github.com/users/${login}?client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+      );
+      dispatch({
+        type: GET_USER_INFO,
+        payload: res.data,
+      });
+    } catch (e) {
+      dispatch({
+        type: GET_USER_INFO,
+        payload: null,
+      });
+    }
   };
 
   // Get User Repos

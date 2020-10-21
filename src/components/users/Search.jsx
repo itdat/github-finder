@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import GithubContext from "../../context/github/githubContext";
 
-const Search = ({ showAlert, searchUsers, clearUsers, showClear }) => {
+const Search = ({ showAlert, clearUsers, showClear }) => {
+  const githubContext = useContext(GithubContext);
+  const { searchUsers } = githubContext;
+
   const [text, setText] = useState("");
 
   const onChange = (e) => {

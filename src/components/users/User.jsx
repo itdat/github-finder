@@ -4,9 +4,9 @@ import Repos from "../repos/Repos";
 import { Link } from "react-router-dom";
 import GithubContext from "../../context/github/githubContext";
 
-const User = ({ match, repos, getUserRepos }) => {
+const User = ({ match }) => {
   const githubContext = useContext(GithubContext);
-  const { user, loading, getUserInfo } = githubContext;
+  const { loading, user, getUserInfo, getUserRepos } = githubContext;
 
   useEffect(() => {
     getUserInfo(match.params.login);
@@ -93,7 +93,7 @@ const User = ({ match, repos, getUserRepos }) => {
           <div className="badge badge-dark">Public Repos: {public_repos}</div>
           <div className="badge badge-light">Public Gists: {public_gists}</div>
         </div>
-        <Repos repos={repos} />
+        <Repos />
       </Fragment>
     );
   }

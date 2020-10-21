@@ -5,25 +5,13 @@ import About from "./components/pages/About";
 import Navbar from "./components/layout/Navbar";
 import Search from "./components/users/Search";
 import Users from "./components/users/Users";
-import axios from "axios";
 import Alert from "./components/layout/Alert";
 import User from "./components/users/User";
 
 import GithubState from "./context/github/GithubState";
 
 const App = () => {
-  const [repos, setRepos] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
-
-  const getUserRepos = async (login) => {
-    setLoading(true);
-    const res = await axios.get(
-      `https://api.github.com/users/${login}/repos?per_page=10&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    setLoading(false);
-    setRepos(res.data);
-  };
 
   const showAlert = (msg, type) => {
     setAlert({ msg, type });
@@ -51,13 +39,7 @@ const App = () => {
                 )}
               />
               <Route exact path="/about" component={About} />
-              <Route
-                exact
-                path="/users/:login"
-                render={(props) => (
-                  <User {...props} getUserRepos={getUserRepos} repos={repos} />
-                )}
-              />
+              <Route exact path="/users/:login" component={User} />
             </Switch>
           </div>
           <div style={{ height: "3rem" }}></div>
